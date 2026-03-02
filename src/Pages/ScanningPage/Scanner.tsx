@@ -4,10 +4,12 @@ import { IoCameraReverse } from "react-icons/io5";
 import { IoCloseSharp } from "react-icons/io5";
 import { LuScanFace } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
+import { IoMdCamera } from "react-icons/io";
 export default function Scanner() {
   const [footer, setFooter] = useState<boolean>(true);
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const photoRef = useRef<HTMLCanvasElement>(null);
 
   const GetVideo = () => {
     navigator.mediaDevices
@@ -25,6 +27,23 @@ export default function Scanner() {
       .catch((err) => {
         console.error(err);
       });
+  };
+
+  const takePhoto = () => {
+    const width = 1000;
+    const height = width / (16 / 27);
+
+    const video = videoRef.current;
+    const photo = photoRef.current;
+
+    if (!photo || !video) return;
+
+    photo.width = width;
+    photo.height = height;
+
+    const ctx = photo.getContext("2d");
+    ctx?.drawImage(video, 0, 0, width, height);
+    console.log("photo");
   };
 
   useEffect(() => {
@@ -83,6 +102,10 @@ export default function Scanner() {
           </ul>
         </div>
       )}
+      <div className="photoBtn">
+        <IoMdCamera onClick={takePhoto} className="photoIcon" />
+      </div>
+      {/* <canvas ref={photoRef}></canvas> */}
     </div>
   );
 }

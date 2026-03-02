@@ -158,6 +158,26 @@
   font-weight: bold;
 }
 
+.photoBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6rem;
+}
+
+.photoIcon {
+  padding: 1rem;
+  background-color: #5b5b5c;
+  border-radius: 100%;
+  border: 1rem solid #292929;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+photoIcon::click {
+  background-color: #004080;
+}
+
 @media screen and (max-width: 500px) {
   .screen {
     min-height: 500px;
