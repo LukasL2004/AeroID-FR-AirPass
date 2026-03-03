@@ -5,6 +5,8 @@ import { IoCloseSharp } from "react-icons/io5";
 import { LuScanFace } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { IoMdCamera } from "react-icons/io";
+import type { enroll } from "../../Services/Interfaces/EnrollInterface";
+import enrollAPI from "../../Services/Impl/EnrollService";
 export default function Scanner() {
   const [footer, setFooter] = useState<boolean>(true);
   const navigate = useNavigate();
@@ -29,6 +31,16 @@ export default function Scanner() {
       });
   };
 
+  const enrollData = async (formData: enroll) => {
+    try {
+      const response = await enrollAPI.enroll(formData);
+      console.log(response);
+      navigate("/AeroId/BoardingPass");
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const takePhoto = () => {
     const width = 1000;
     const height = width / (16 / 27);
@@ -44,6 +56,25 @@ export default function Scanner() {
     const ctx = photo.getContext("2d");
     ctx?.drawImage(video, 0, 0, width, height);
     console.log("photo");
+
+    photo.toBlob(
+      async (blob) => {
+        if (!blob) {
+          console.log("An error occured while creating the blob");
+          return;
+        }
+        const data = {
+          photo: blob,
+          name: "Lukas Laza",
+          flight: "RO409",
+        };
+
+        await enrollData(data);
+        console.log("yupiii");
+      },
+      "image/jpg",
+      0.9,
+    );
   };
 
   useEffect(() => {
@@ -52,9 +83,6 @@ export default function Scanner() {
 
   const toLogin = () => {
     navigate("/AeroId/Login");
-  };
-  const toBoarding = () => {
-    navigate("/AeroId/BoardingPass");
   };
 
   return (
@@ -67,7 +95,7 @@ export default function Scanner() {
           <div className="point"></div>
           <div className="scanStatus">ENCRYPTED LIVE LINK</div>
         </div>
-        <div onClick={toBoarding} className="revCamera hdElement">
+        <div className="revCamera hdElement">
           <IoCameraReverse />
         </div>
       </div>
@@ -105,7 +133,7 @@ export default function Scanner() {
       <div className="photoBtn">
         <IoMdCamera onClick={takePhoto} className="photoIcon" />
       </div>
-      {/* <canvas ref={photoRef}></canvas> */}
+      <canvas ref={photoRef} style={{ display: "none" }}></canvas>
     </div>
   );
 }
