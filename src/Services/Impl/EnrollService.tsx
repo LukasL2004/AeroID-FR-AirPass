@@ -1,6 +1,6 @@
 import type { enroll, EnrollResponse } from "../Interfaces/EnrollInterface";
 
-const API_LINK = "http://localhost:8080/api";
+const API_LINK = "https://aeroid-be.onrender.com/api";
 
 const enrollAPI = {
   enroll: async (passager: enroll): Promise<EnrollResponse> => {
