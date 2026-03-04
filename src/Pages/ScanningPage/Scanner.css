@@ -77,8 +77,9 @@
 .screen {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Umple tot spațiul fără să deformeze, taie marginile dacă e nevoie */
-  display: block; /* Elimină spațiile goale de sub video */
+  object-fit: cover;
+  display: block;
+  transform: scaleX(-1);
 }
 
 .videoContainer::after {
