@@ -6,7 +6,7 @@ const enrollAPI = {
   enroll: async (passager: enroll): Promise<EnrollResponse> => {
     try {
       const formData = new FormData();
-      formData.append("photo", passager.photo);
+      formData.append("photo", passager.photo, "poza_pasager.jpg");
       formData.append("name", passager.name);
       formData.append("flight", passager.flight);
 
