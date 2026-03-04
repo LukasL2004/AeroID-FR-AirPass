@@ -2,8 +2,20 @@ import "./BoardingPass.css";
 import { IoFingerPrintOutline } from "react-icons/io5";
 import { IoIosAirplane } from "react-icons/io";
 import { MdLockOutline } from "react-icons/md";
+import QRCode from "react-qr-code";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 export default function BoardingPass() {
+  const location = useLocation();
+  const [qrValue, setQrValue] = useState<string>();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setQrValue(location.state?.qrCode);
+    }, 0);
+  }, []);
+
   return (
     <div className="pass">
       <div className="passHeader">
@@ -58,9 +70,7 @@ export default function BoardingPass() {
             <p className="status">PASSENGER</p>
             <h2 className="name">Laza Lukas</h2>
           </div>
-          <div className="code">
-            <img src="/QR.svg" alt="" />
-          </div>
+          <div className="code">{qrValue && <QRCode value={qrValue} />}</div>
           <div className="security">
             <MdLockOutline />
             <p>Identity Encrypted</p>

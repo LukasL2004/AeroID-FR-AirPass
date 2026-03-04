@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { IoMdCamera } from "react-icons/io";
 import type { enroll } from "../../Services/Interfaces/EnrollInterface";
 import enrollAPI from "../../Services/Impl/EnrollService";
+
 export default function Scanner() {
   const [footer, setFooter] = useState<boolean>(true);
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export default function Scanner() {
     try {
       const response = await enrollAPI.enroll(formData);
       console.log(response);
-      navigate("/AeroId/BoardingPass");
+      navigate("/AeroId/BoardingPass", { state: { qrCode: response.token } });
     } catch (e) {
       console.log(e);
     }
