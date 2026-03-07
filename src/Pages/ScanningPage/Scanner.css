@@ -198,3 +198,128 @@ photoIcon::click {
     }
   }
 }
+
+/* =========================================
+   FULLSCREEN LOADING OVERLAY
+   ========================================= */
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(
+    5,
+    5,
+    6,
+    0.85
+  ); /* Fundal semi-transparent, se potrivește cu #050506 */
+  backdrop-filter: blur(5px); /* Efect de blur peste video și interfață */
+  z-index: 9999; /* Trebuie să fie peste orice alt element */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-overlay p {
+  margin-top: 30px;
+  color: #fff;
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
+  font-weight: bold;
+}
+
+.fullscreen-spinner {
+  width: 80px; /* Mai mare pentru că e pe tot ecranul */
+  height: 80px;
+  position: relative;
+}
+
+.fs-dot {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.fs-dot::before {
+  content: "";
+  display: block;
+  width: 15px; /* Puncte mai mari */
+  height: 15px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: fsChaseColor 1s infinite linear;
+}
+
+/* Poziționare în cerc */
+.fs-dot:nth-child(1) {
+  transform: rotate(0deg);
+}
+.fs-dot:nth-child(2) {
+  transform: rotate(45deg);
+}
+.fs-dot:nth-child(3) {
+  transform: rotate(90deg);
+}
+.fs-dot:nth-child(4) {
+  transform: rotate(135deg);
+}
+.fs-dot:nth-child(5) {
+  transform: rotate(180deg);
+}
+.fs-dot:nth-child(6) {
+  transform: rotate(225deg);
+}
+.fs-dot:nth-child(7) {
+  transform: rotate(270deg);
+}
+.fs-dot:nth-child(8) {
+  transform: rotate(315deg);
+}
+
+/* Delay pentru animație */
+.fs-dot:nth-child(1)::before {
+  animation-delay: -0.875s;
+}
+.fs-dot:nth-child(2)::before {
+  animation-delay: -0.75s;
+}
+.fs-dot:nth-child(3)::before {
+  animation-delay: -0.625s;
+}
+.fs-dot:nth-child(4)::before {
+  animation-delay: -0.5s;
+}
+.fs-dot:nth-child(5)::before {
+  animation-delay: -0.375s;
+}
+.fs-dot:nth-child(6)::before {
+  animation-delay: -0.25s;
+}
+.fs-dot:nth-child(7)::before {
+  animation-delay: -0.125s;
+}
+.fs-dot:nth-child(8)::before {
+  animation-delay: 0s;
+}
+
+/* Am folosit o nuanță de albastru (#004080 / #4090e1) care se potrivește cu border-ul tău */
+@keyframes fsChaseColor {
+  0% {
+    background-color: #4090e1;
+    transform: scale(1.3);
+    opacity: 1;
+    box-shadow: 0 0 10px #4090e1; /* Puțin glow */
+  }
+  100% {
+    background-color: #ffffff;
+    transform: scale(0.8);
+    opacity: 0.3;
+    box-shadow: none;
+  }
+}

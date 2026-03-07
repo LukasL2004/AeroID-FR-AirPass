@@ -3,16 +3,22 @@ import "./Scanner.css";
 import { IoCameraReverse } from "react-icons/io5";
 import { IoCloseSharp } from "react-icons/io5";
 import { LuScanFace } from "react-icons/lu";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { IoMdCamera } from "react-icons/io";
 import type { enroll } from "../../Services/Interfaces/EnrollInterface";
 import enrollAPI from "../../Services/Impl/EnrollService";
 
 export default function Scanner() {
   const [footer, setFooter] = useState<boolean>(true);
+  // NOU: Starea de loading
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement>(null);
   const photoRef = useRef<HTMLCanvasElement>(null);
+
+  const { state } = useLocation();
+  const passengerName = state?.name || "";
+  const passengerFlight = state?.flight || "";
 
   const GetVideo = () => {
     navigator.mediaDevices
@@ -36,20 +42,34 @@ export default function Scanner() {
     try {
       const response = await enrollAPI.enroll(formData);
       console.log(response);
-      navigate("/AeroId/BoardingPass", { state: { qrCode: response.token } });
+      navigate("/AeroId/BoardingPass", { 
+        state: { 
+          qrCode: response.token,
+          name: passengerName,
+          flight: passengerFlight
+        } 
+      });
     } catch (e) {
       console.log(e);
+      // NOU: Oprire loading in caz de eroare
+      setIsLoading(false);
     }
   };
 
   const takePhoto = () => {
+    // NOU: Pornire loading
+    setIsLoading(true);
+
     const width = 1000;
     const height = width / (16 / 27);
 
     const video = videoRef.current;
     const photo = photoRef.current;
 
-    if (!photo || !video) return;
+    if (!photo || !video) {
+      setIsLoading(false);
+      return;
+    }
 
     photo.width = width;
     photo.height = height;
@@ -62,18 +82,25 @@ export default function Scanner() {
       async (blob) => {
         if (!blob) {
           console.log("An error occured while creating the blob");
+          setIsLoading(false);
           return;
         }
+
+        console.log("====== INFO POZA ======");
+        console.log("Marime poza:", (blob.size / 1024).toFixed(2), "KB");
+        console.log("Tip poza:", blob.type);
+        console.log("=======================");
+
         const data = {
           photo: blob,
-          name: "Lukas Laza",
-          flight: "RO409",
+          name: passengerName,
+          flight: passengerFlight,
         };
 
         await enrollData(data);
         console.log("yupiii");
       },
-      "image/jpg",
+      "image/jpeg", // Modificat în jpeg pentru siguranță
       0.9,
     );
   };
@@ -88,6 +115,23 @@ export default function Scanner() {
 
   return (
     <div className="scanner">
+      {/* OVERLAY LOADING */}
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="fullscreen-spinner">
+            <div className="fs-dot"></div>
+            <div className="fs-dot"></div>
+            <div className="fs-dot"></div>
+            <div className="fs-dot"></div>
+            <div className="fs-dot"></div>
+            <div className="fs-dot"></div>
+            <div className="fs-dot"></div>
+            <div className="fs-dot"></div>
+          </div>
+          <p>Processing Data...</p>
+        </div>
+      )}
+
       <div className="scannerHeader">
         <div onClick={toLogin} className="closeBtn hdElement">
           <IoCloseSharp />

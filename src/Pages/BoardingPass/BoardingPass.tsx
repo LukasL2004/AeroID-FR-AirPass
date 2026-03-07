@@ -5,16 +5,36 @@ import { MdLockOutline } from "react-icons/md";
 import QRCode from "react-qr-code";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import enrollAPI from "../../Services/Impl/EnrollService";
 
 export default function BoardingPass() {
   const location = useLocation();
   const [qrValue, setQrValue] = useState<string>();
+  const [flightData, setFlightData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setQrValue(location.state?.qrCode);
-    }, 0);
-  }, []);
+    const fetchInfo = async () => {
+      const { name, flight, qrCode } = location.state || {};
+      if (qrCode) setQrValue(qrCode);
+
+      if (name && flight) {
+        try {
+          const data = await enrollAPI.enrollVerify({ name, flight });
+          setFlightData(data);
+        } catch (error) {
+          console.error("Failed to fetch flight info for boarding pass", error);
+        }
+      }
+      setLoading(false);
+    };
+
+    fetchInfo();
+  }, [location.state]);
+
+  if (loading) {
+    return <div className="pass"><h2 style={{color: "white", textAlign: "center", marginTop: "50%"}}>Loading your pass...</h2></div>;
+  }
 
   return (
     <div className="pass">
@@ -27,48 +47,53 @@ export default function BoardingPass() {
           <div className="date">
             <div>
               <label className="infoLabel">BOARDING PASS</label>
-              <h2>RO 593</h2>
+              <h2>{flightData?.flightId || "N/A"}</h2>
             </div>
             <div>
               <label className="infoLabel">DATE</label>
-              <h2 className="date">Jan 26</h2>
+              <h2 className="date">{flightData?.flightDate || "N/A"}</h2>
             </div>
           </div>
           <div className="destination">
             <div className="location">
-              <h1 className="cutNamed">OMR</h1>
-              <p className="fullName">Oradea</p>
+              <h1 className="cutNamed">{flightData?.departure?.substring(0,3).toUpperCase() || "N/A"}</h1>
+              <p className="fullName">{flightData?.departure || "N/A"}</p>
             </div>
             <div className="plane">
               <div className="planeComp">
                 <IoIosAirplane className="planeIcn" />
-                <p>1h 35m</p>
+                <p>{flightData?.flightTime || "1h 35m"}</p>
               </div>
             </div>
             <div className="location">
-              <h1 className="cutNamed">OTP</h1>
-              <p className="fullName">Bucharest</p>
+              <h1 className="cutNamed">{flightData?.arrival?.substring(0,3).toUpperCase() || "N/A"}</h1>
+              <p className="fullName">{flightData?.arrival || "N/A"}</p>
             </div>
           </div>
           <div className="airportInfo">
             <div className="infomations">
               <label className="infomationsLabel">BOARDING</label>
-              <p className="infomationsData">10: 45 AM</p>
+              <p className="infomationsData">{flightData?.boardingHour || "N/A"}</p>
             </div>
             <div className="infomations">
               <label className="infomationsLabel">GATE</label>
-              <p className="infomationsData">G4</p>
+              <p className="infomationsData">{flightData?.gate || "N/A"}</p>
             </div>
             <div className="infomations">
               <label className="infomationsLabel">SEAT</label>
-              <p className="infomationsData">12A</p>
+              <p className="infomationsData">{flightData?.seat || "N/A"}</p>
             </div>
           </div>
         </div>
         <div className="mainPass">
           <div className="names">
             <p className="status">PASSENGER</p>
-            <h2 className="name">Laza Lukas</h2>
+            <h2 className="name">
+              {(flightData?.passengerName || location.state?.name || "N/A")
+                .split(' ')
+                .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ')}
+            </h2>
           </div>
           <div className="code">{qrValue && <QRCode value={qrValue} />}</div>
           <div className="security">

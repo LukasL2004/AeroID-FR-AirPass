@@ -11,3 +11,8 @@ export interface EnrollResponse {
   passengerName: string;
   flight: string;
 }
+
+export interface enrollVerify{
+  name: string;
+  flight: string;
+}
