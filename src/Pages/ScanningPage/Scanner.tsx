@@ -150,8 +150,7 @@ export default function Scanner() {
           <div className="face"></div>
         </div>
       </div>
-      {footer && (
-        <div className="scannerFooter">
+      <div className={`scannerFooter ${!footer ? 'footer-hidden' : ''}`}>
           <div
             className="line"
             onClick={() => {
@@ -174,11 +173,10 @@ export default function Scanner() {
             <li>AeroId verified</li>
           </ul>
         </div>
-      )}
-      <div className="photoBtn">
+      <div className={`photoBtn ${footer ? 'photoBtn-hidden' : ''}`}>
         <IoMdCamera onClick={takePhoto} className="photoIcon" />
       </div>
-      <canvas ref={photoRef} style={{ display: "none" }}></canvas>
+      <canvas ref={photoRef} style={{ opacity: 0, position: "absolute", zIndex: -1 }}></canvas>
     </div>
   );
 }

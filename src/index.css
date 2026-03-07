@@ -1,10 +1,32 @@
-/* Reset global pentru margini */
-body,
-html {
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --primary: #3b82f6;
+  --primary-glow: rgba(59, 130, 246, 0.4);
+  --accent: #6366f1;
+  --bg-dark: #04050f;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #f1f5f9;
+  --text-muted: #64748b;
+  --success: #10b981;
+  --danger: #ef4444;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+body, html {
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
-  overflow-x: hidden; /* Previne scroll-ul orizontal nedorit */
+  overflow-x: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-dark);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(99, 102, 241, 0.25) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 85% 80%, rgba(59, 130, 246, 0.12) 0%, transparent 60%);
+  color: var(--text);
 }

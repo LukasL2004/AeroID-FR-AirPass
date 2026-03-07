@@ -12,6 +12,7 @@ export default function BoardingPass() {
   const [qrValue, setQrValue] = useState<string>();
   const [flightData, setFlightData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [qrExpanded, setQrExpanded] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -95,7 +96,19 @@ export default function BoardingPass() {
                 .join(' ')}
             </h2>
           </div>
-          <div className="code">{qrValue && <QRCode value={qrValue} />}</div>
+          <div className="code" onClick={() => qrValue && setQrExpanded(true)} style={{ cursor: qrValue ? 'pointer' : 'default' }} title="Click to expand">
+            {qrValue && <QRCode value={qrValue} />}
+          </div>
+          {qrValue && <span className="qr-hint">Tap to zoom</span>}
+
+          {qrExpanded && (
+            <div className="qr-overlay" onClick={() => setQrExpanded(false)}>
+              <div className="qr-modal" onClick={e => e.stopPropagation()}>
+                <QRCode value={qrValue!} size={260} />
+                <button className="qr-close" onClick={() => setQrExpanded(false)}>✕ Close</button>
+              </div>
+            </div>
+          )}
           <div className="security">
             <MdLockOutline />
             <p>Identity Encrypted</p>

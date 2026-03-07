@@ -1,12 +1,3 @@
 .navbar {
-  background: linear-gradient(to right, rgb(54, 54, 238), #fff);
-}
-
-.leftPart {
-  display: flex;
-  flex-direction: row;
-  padding: 0;
-  margin: 0;
-  align-items: center;
-  gap: 1rem;
+  display: none;
 }
