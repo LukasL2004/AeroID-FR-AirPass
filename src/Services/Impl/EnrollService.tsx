@@ -10,13 +10,18 @@ const enrollAPI = {
       formData.append("name", passager.name);
       formData.append("flight", passager.flight);
 
+      console.log(`Sending POST request to: ${API_LINK}/enroll`);
       const response: Response = await fetch(`${API_LINK}/enroll`, {
         method: "POST",
         body: formData,
       });
+      
+      console.log("API Response Status (enroll):", response.status, response.statusText);
 
       if (!response.ok) {
-        throw new Error("Sorry something went wrong");
+        const errText = await response.text();
+        console.error("API Error Body (enroll):", errText);
+        throw new Error(errText || "Sorry something went wrong");
       }
 
       const data: EnrollResponse = await response.json();
@@ -34,12 +39,16 @@ const enrollAPI = {
           flight: passager.flight
       }).toString();
 
+      console.log(`Sending GET request to: ${API_LINK}/flight-info?${queryParams}`);
       const response: Response = await fetch(`${API_LINK}/flight-info?${queryParams}`, {
         method: "GET",
       });
+      
+      console.log("API Response Status (enrollVerify):", response.status, response.statusText);
 
       if (!response.ok) {
         const errText = await response.text();
+        console.error("API Error Body (enrollVerify):", errText);
         throw new Error(errText || "Sorry something went wrong");
       }
 
