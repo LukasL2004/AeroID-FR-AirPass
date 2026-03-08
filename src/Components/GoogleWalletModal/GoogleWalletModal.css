@@ -1,0 +1,320 @@
+/* AppleWalletModal.css */
+/* iOS-style / App-style modal variables */
+:root {
+  --gw-bg-dim: rgba(4, 5, 15, 0.88); /* Matching qr-overlay background */
+  --gw-modal-bg: rgba(10, 12, 25, 0.95); /* Dark background for modal container */
+  --gw-pass-bg: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); /* Blue gradient instead of green */
+  --gw-text-main: #f1f5f9; /* Light text for dark mode */
+  --gw-text-pass: #ffffff;
+  --gw-animation-duration: 0.55s; /* Slightly longer for smoother feel */
+  --gw-bezier: cubic-bezier(0.16, 1, 0.3, 1); /* Smooth iOS-like ease-out */
+}
+
+/* Overlay Background */
+.gw-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--gw-bg-dim);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  opacity: 0;
+  transition: opacity var(--gw-animation-duration) var(--gw-bezier);
+  pointer-events: none;
+}
+
+.gw-modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Modal Container (Slides up) */
+.gw-modal-container {
+  background-color: var(--gw-modal-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: none;
+  width: 100%;
+  height: 92vh; /* Tall enough to feel like iOS modal */
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  padding: 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transform: translateY(100%);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  will-change: transform;
+}
+
+.gw-modal-container.slide-up {
+  animation: slideUp var(--gw-animation-duration) var(--gw-bezier) forwards;
+}
+
+.gw-modal-container.slide-down {
+  animation: slideDown var(--gw-animation-duration) var(--gw-bezier) forwards;
+}
+
+/* Header Controls */
+.gw-modal-header {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0 24px 0;
+}
+
+.gw-btn-cancel,
+.gw-btn-add {
+  background: none;
+  border: none;
+  font-size: 17px;
+  cursor: pointer;
+  padding: 8px;
+  font-weight: 400;
+}
+
+.gw-btn-cancel {
+  color: #3b82f6; /* App blue */
+}
+
+.gw-btn-add {
+  color: #3b82f6;
+  font-weight: 600; /* iOS bold Add button */
+}
+
+.gw-modal-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--gw-text-main);
+}
+
+/* The Pass Itself */
+.gw-pass-card {
+  width: 90%;
+  max-width: 360px; /* Slightly smaller maximum width */
+  background: var(--gw-pass-bg);
+  border-radius: 24px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 40px rgba(59,130,246,0.3);
+  display: flex;
+  flex-direction: column;
+  color: var(--gw-text-pass);
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+  /* Top Notch cutout illusion */
+  margin-top: 10px;
+}
+
+/* Pass Header */
+.gw-card-header {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gw-card-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gw-brand-logo {
+  font-size: 24px;
+}
+
+.gw-brand-name {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.gw-card-icon {
+  font-size: 28px;
+  opacity: 0.9;
+}
+
+/* Pass Body (Flight Details) */
+.gw-card-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.gw-route-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gw-route-point h1 {
+  font-size: 42px;
+  font-weight: 300;
+  margin: 0;
+  line-height: 1;
+}
+
+.gw-route-point p {
+  font-size: 12px;
+  text-transform: uppercase;
+  margin: 4px 0 0 0;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.gw-route-icon {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.gw-details-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.gw-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.gw-detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.gw-detail-item label {
+  font-size: 10px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 2px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.gw-detail-item span {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Pass Footer (QR Code) */
+.gw-card-footer {
+  background: var(--gw-text-pass);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-top-left-radius: 24px; /* More rounded to match main app radius */
+  border-top-right-radius: 24px;
+  color: var(--gw-text-main);
+}
+
+.gw-qr-container {
+  background: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.gw-pass-hint {
+  font-size: 11px;
+  opacity: 0.5;
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #000;
+}
+
+/* Toast Success Message */
+.gw-toast {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(30, 30, 30, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 10000;
+  box-shadow: 0 4px 30px rgba(59,130,246,0.2);
+  border: 1px solid rgba(255,255,255,0.1);
+  animation: fadeToast 2s ease forwards;
+}
+
+.gw-toast-icon {
+  font-size: 40px;
+  font-weight: bold;
+}
+
+/* Animations */
+@keyframes slideUp {
+  0% { transform: translateY(100%); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes fadeToast {
+  0% { opacity: 0; transform: translate(-50%, -40%); }
+  15% { opacity: 1; transform: translate(-50%, -50%); }
+  85% { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -60%); }
+}
+
+/* Mobile specific responsive adjustments */
+@media screen and (max-width: 400px) {
+  .gw-modal-container {
+    height: 95vh;
+    padding: 12px 10px;
+  }
+
+  .gw-pass-card {
+    width: 94%;
+    max-width: 340px;
+    border-radius: 20px;
+  }
+
+  .gw-card-header {
+    padding: 16px 20px;
+  }
+
+  .gw-card-body {
+    padding: 20px 16px;
+    gap: 16px;
+  }
+
+  .gw-route-point h1 {
+    font-size: 32px;
+  }
+
+  .gw-card-footer {
+    padding: 20px 16px;
+  }
+
+  .gw-qr-container {
+    padding: 8px;
+  }
+}

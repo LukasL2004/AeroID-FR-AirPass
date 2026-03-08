@@ -3,9 +3,15 @@ import { IoFingerPrintOutline } from "react-icons/io5";
 import { IoIosAirplane } from "react-icons/io";
 import { MdLockOutline } from "react-icons/md";
 import QRCode from "react-qr-code";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import enrollAPI from "../../Services/Impl/EnrollService";
+import { toPng } from "html-to-image";
+import AppleWalletModal from "../../Components/AppleWalletModal/AppleWalletModal";
+import GoogleWalletModal from "../../Components/GoogleWalletModal/GoogleWalletModal";
+import { FaApple } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { HiOutlineDownload } from "react-icons/hi";
 
 export default function BoardingPass() {
   const location = useLocation();
@@ -13,6 +19,10 @@ export default function BoardingPass() {
   const [flightData, setFlightData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [qrExpanded, setQrExpanded] = useState<boolean>(false);
+  const [appleWalletOpen, setAppleWalletOpen] = useState(false);
+  const [googleWalletOpen, setGoogleWalletOpen] = useState(false);
+  const [isSavingImage, setIsSavingImage] = useState(false);
+  const passRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -33,12 +43,48 @@ export default function BoardingPass() {
     fetchInfo();
   }, [location.state]);
 
+  const handleSaveImage = async () => {
+    if (!passRef.current) return;
+    
+    setIsSavingImage(true);
+    
+    // Ascundem butoanele de wallet si galerie inainte de screenshot
+    const buttonsContainer = document.querySelector('.wallet-buttons-container') as HTMLElement;
+    if (buttonsContainer) {
+      buttonsContainer.style.display = 'none';
+      buttonsContainer.style.opacity = '0'; // Extra precaution
+    }
+
+    try {
+      // html-to-image natively renders exactly what the browser shows (SVGs, blur, gradients)
+      const dataUrl = await toPng(passRef.current, { 
+        cacheBust: true,
+        pixelRatio: 2 // for high-quality export
+      });
+      
+      const link = document.createElement("a");
+      link.download = flightData?.flightId ? `AeroID-BoardingPass-${flightData.flightId}.png` : "AeroID-BoardingPass.png";
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error("Failed to save high-fidelity image", error);
+    } finally {
+      // Restore buttons layout immediately after processing
+      if (buttonsContainer) {
+        buttonsContainer.style.display = 'flex';
+        buttonsContainer.style.opacity = '1';
+      }
+      setIsSavingImage(false);
+    }
+  };
+
   if (loading) {
     return <div className="pass"><h2 style={{color: "white", textAlign: "center", marginTop: "50%"}}>Loading your pass...</h2></div>;
   }
 
   return (
-    <div className="pass">
+    <div className="pass-page-wrapper">
+    <div className="pass" ref={passRef}>
       <div className="passHeader">
         <IoFingerPrintOutline className="logo" />
         <h2 className="passTitle">AeroID</h2>
@@ -113,9 +159,46 @@ export default function BoardingPass() {
             <MdLockOutline />
             <p>Identity Encrypted</p>
           </div>
+
+          <div className="wallet-buttons-container" data-html2canvas-ignore="true">
+            <div className="wallet-buttons-row">
+                <button className="apple-wallet-btn" onClick={() => setAppleWalletOpen(true)}>
+                    <FaApple className="wallet-icon" />
+                    <span>Add to Apple Wallet</span>
+                </button>
+                <button className="google-wallet-btn" onClick={() => setGoogleWalletOpen(true)}>
+                    <FcGoogle className="wallet-icon" />
+                    <span>Add to Google Wallet</span>
+                </button>
+            </div>
+            
+            <button 
+                className={`save-gallery-btn ${isSavingImage ? 'saving' : ''}`}
+                onClick={handleSaveImage}
+                disabled={isSavingImage}
+            >
+                <HiOutlineDownload className="gallery-icon" />
+                <span>{isSavingImage ? "Saving Image..." : "Save Image to Gallery"}</span>
+            </button>
+          </div>
         </div>
       </div>
       <div className="footer"></div>
+    </div>
+
+    <AppleWalletModal 
+        isOpen={appleWalletOpen} 
+        onClose={() => setAppleWalletOpen(false)} 
+        flightData={flightData}
+        qrValue={qrValue}
+    />
+    
+    <GoogleWalletModal 
+        isOpen={googleWalletOpen} 
+        onClose={() => setGoogleWalletOpen(false)} 
+        flightData={flightData}
+        qrValue={qrValue}
+    />
     </div>
   );
 }

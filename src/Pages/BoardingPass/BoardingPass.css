@@ -388,3 +388,123 @@ h2 {
   color: #ef4444;
 }
 
+/* ── Wallet & Export Buttons ── */
+.pass-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 3.5rem;
+}
+
+.wallet-buttons-container {
+  width: 100%;
+  max-width: 300px; /* narrowed to make buttons distinctly smaller */
+  margin: 1rem auto 0.5rem auto; /* centered horizontally with auto */
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* tighter spacing */
+  animation: fadeIn 0.6s ease 0.3s both;
+}
+
+.wallet-buttons-row {
+  display: flex;
+  gap: 8px; /* tighter spacing */
+  width: 100%;
+}
+
+.apple-wallet-btn, .google-wallet-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 6px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.7rem; /* very minimalist font size */
+  font-weight: 500;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease;
+  will-change: transform;
+}
+
+.apple-wallet-btn {
+  background: #000000;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.apple-wallet-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.apple-wallet-btn:active {
+  transform: translateY(0);
+}
+
+.google-wallet-btn {
+  background: #1a73e8; /* Official Google Blue */
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(26, 115, 232, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.google-wallet-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(26, 115, 232, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  background: #1b66c9;
+}
+
+.google-wallet-btn:active {
+  transform: translateY(0);
+}
+
+.wallet-icon {
+  font-size: 1rem;
+  margin-top: -1px;
+}
+
+.save-gallery-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05); /* very transparent Frosted glass effect */
+  border: 1px solid rgba(255, 255, 255, 0.08); /* slight stroke */
+  color: #e2e8f0; /* softer text color */
+  font-size: 0.75rem; /* minimalist */
+  font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  letter-spacing: 0.01em;
+}
+
+.save-gallery-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.save-gallery-btn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+}
+
+.save-gallery-btn.saving {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+  cursor: wait;
+}
+
+.gallery-icon {
+  font-size: 1.4rem;
+}
+
