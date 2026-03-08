@@ -28,7 +28,7 @@ export default function Login() {
     try {
       const response = await enrollAPI.enrollVerify(form);
       console.log("enrollVerify response:", response);
-      navigate("/AeroID/Scanner", { state: { name: form.name, flight: form.flight } });
+      navigate("/AeroID/PhotoUpload", { state: { name: form.name, flight: form.flight } });
     } catch(error: any) {
       console.error("Error inside toScanner:", error);
       const errorMsg = error?.message || "Failed to find your flight. Please try again!";
